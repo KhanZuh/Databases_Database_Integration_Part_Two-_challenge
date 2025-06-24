@@ -1,0 +1,54 @@
+From the schema, the albums table has these columns:
+id SERIAL PRIMARY KEY          -> self.id
+title VARCHAR(255)             -> self.title  
+release_year INTEGER           -> self.release_year
+artist_id INTEGER              -> self.artist_id
+
+So Album class __init__ method should take these four parameters.
+    def __init__(.........)
+    # Copy the __eq__ method from Artist class
+    # (it compares self.__dict__ == other.__dict__ so it works for any class)
+
+    # Copy the __repr__ method from Artist class  
+    # But change it to show Album info instead of Artist info
+    # Hint: return f"Album({self.id}, {self.title}, {self.release_year}, {self.artist_id})"
+    pass
+
+__eq__ method
+What it does: This method defines how Python compares two Album objects when you use ==
+Why you need it: Without this method, Python would only consider two Album objects equal if they're the exact same object in memory. But we want two Album objects to be "equal" if they have the same data.
+
+__repr__ method
+What it does: This method controls how your object looks when you print it or see it in lists.
+Why you need both: They make debugging much easier and allow your tests to work properly. When you're testing that your repository returns the right Album objects, the test framework uses these methods to compare and display the objects.
+
+
+Why we create objects?
+What the database gives us (raw data):
+```
+# When you run: SELECT * from albums
+# The database returns something like this:
+[
+  {"id": 1, "title": "Doolittle", "release_year": 1989, "artist_id": 1},
+  {"id": 2, "title": "Surfer Rosa", "release_year": 1988, "artist_id": 1},
+  {"id": 3, "title": "Waterloo", "release_year": 1974, "artist_id": 2}
+]
+# This is just dictionaries with key-value pairs
+```
+
+What we create (Album objects):
+```
+# Instead, we convert each dictionary into an Album object:
+[
+  Album(1, "Doolittle", 1989, 1),
+  Album(2, "Surfer Rosa", 1988, 1), 
+  Album(3, "Waterloo", 1974, 2)
+]
+```
+
+why create?
+1. Clean, predictable interface:
+2. Consistency with the rest of your code:
+3. Future methods
+
+ELI5: Think of it like a factory assembly line. The database gives you raw materials (dictionaries), but your app wants finished products (Album objects) that everyone knows how to use consistently.
