@@ -1,84 +1,21 @@
-# Database Project Starter
+# How to understand this repo
+Imagine you have a huge library with thousands of music albums, but instead of walking around looking for albums yourself, you have a helpful librarian (the AlbumRepository) who knows exactly where everything is stored. 
 
-This is a starter project for you to use to start your Python database projects.
+When you want to find albums, you don't talk directly to the library's filing system - instead, you ask the librarian. The librarian then goes to a special computer system (DatabaseConnection) that keeps track of where every single album is located in the library (Database). 
 
-There are two videos to support:
+When you ask "show me all the albums," the librarian asks the computer to find every album, and then the computer goes through all the filing cabinets and brings back a big list. The librarian then takes this messy list and organizes it into neat, easy-to-understand album cards (Album objects) before giving them to you. 
 
-* [A demonstration of setting up the project](https://www.youtube.com/watch?v=KMEt4GgWJXc)
-* [A walkthrough of the project codebase](https://youtu.be/KMEt4GgWJXc?t=460)
+If you ask for a specific album by name, the same process happens but the computer only looks for that one album. This way, you get what you need without having to understand how the library's complex filing system works - the librarian handles all the complicated stuff for you!
 
-## Setup
+# Sequence diagram (Mermaid)
 
-### 1. Clone the repository to your local machine
-```
-; git clone git@github.com:makersacademy/databases-in-python-project-starter.git YOUR_PROJECT_NAME
-```
-
-> Or, if you don't have SSH keys set up
-```
-; git clone https://github.com/makersacademy/databases-in-python-project-starter.git YOUR_PROJECT_NAME
-```
-
-### 2. Enter the directory
-```
-; cd YOUR_PROJECT_NAME
-```
-
-### 3. Set up the virtual environment
-```
-; python -m venv databases-starter-venv
-```
-
-### 4. Activate the virtual environment
-```
-; source databases-starter-venv/bin/activate 
-```
+![Editor _ Mermaid Chart-2025-06-25-092521](https://github.com/user-attachments/assets/03253d47-937a-45dc-a060-7432585dcef3)
 
 
-### 5. Install dependencies
-```
-(databases-starter-venv); pip install -r requirements.txt
-```
+This sequence diagram illustrates how a music library application retrieves album data from a PostgreSQL database using a layered architecture pattern. 
 
-> Read below if you see an error with `python_full_version`
+The flow begins when a user runs the application from the terminal, which triggers the main `app.py` program to initialize a database connection and seed it with test data from a SQL file. The application then creates an `AlbumRepository` instance that acts as an intermediary between the application logic and the database. 
 
-### 6. Create the database
-```
-(databases-starter-venv); createdb YOUR_PROJECT_NAME
-```
+When users request album information, there are two main operations: retrieving all albums using the `all()` method, which executes a SELECT query and converts each database row into an `Album` object before returning a list to the user; and finding a specific album using the `find()` method, which uses a parameterized query to search by ID and either returns a single `Album` object or raises an exception if no match is found. 
 
-> `YOUR_PROJECT_NAME` can be anything you want it to be
-
-### 7. Change `DATABASE_NAME` to equal `YOUR_PROJECT_NAME`
-
-On line 11 of `lib/database_connection.py` you'll find this...
-
-```
-DATABASE_NAME = "DEFAULT_MAKERS_PROJECT" # <-- CHANGE THIS!
-```
-
-Change `DEFAULT_MAKERS_PROJECT` to whatever you chose for `YOUR_PROJECT_NAME`
-
-### 8. Run the tests - see below if you have any issues
-```
-(databases-starter-venv); pytest
-```
-> If the tests fail, see below
-
-### 9. Run the app
-```
-(databases-starter-venv); python app.py
-```
-
-<br>
-<details>
-  <summary>I get a <code>ModuleNotFoundError: No module named 'psycopg'</code></summary>
-  <br>
-If, after activating your <code>venv</code> and installing dependencies, you see this error when running <code>pytest</code>, please deactivate and reactivate your <code>venv</code>. This should solve the problem - if not, contact your coach.
-</details>
-<br>
-<details>
-  <summary>The tests fails and I see <code>Exception: Couldn't connect to the database DEFAULT_MAKERS_PROJECT!</code></summary>
-  <br>
-This error most likely means you need to edit line 11 in <code>lib/database_connection.py</code>. Go there and change <code>"DEFAULT_MAKERS_PROJECT"</code> to the name of the database you created in step 6.
-</details>
+Throughout this process, the `DatabaseConnection` class handles all direct database interactions, while the `AlbumRepository` implements the Object-Relational Mapping (ORM) pattern by transforming raw database rows into meaningful Python objects, creating a clean separation between the database layer and the application logic.
